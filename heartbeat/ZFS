@@ -85,8 +85,6 @@ zpool_is_imported () {
 # Forcibly imports a ZFS pool, mounting all of its auto-mounted filesystems
 # (as configured in the `mountpoint' and `canmount' properties)
 # If the pool is already imported, no operation is taken.
-# You can use the zfs-helper script to assist pool setup before and/or
-# after import.
 zpool_import () {
     if ! zpool_is_imported; then
         debug_log "starting import"
@@ -110,8 +108,6 @@ zpool_import () {
 
 # Forcibly exports a ZFS pool, unmounting all of its filesystems in the process
 # If the pool is not imported, no operation is taken.
-# You can use the zfs-helper script to assist pool setup before and/or
-# after export.
 zpool_export () {
     if zpool_is_imported; then
         debug_log "starting export"
