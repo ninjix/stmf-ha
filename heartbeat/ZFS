@@ -90,11 +90,6 @@ zpool_is_imported () {
 zpool_import () {
     if ! zpool_is_imported; then
         debug_log "starting import"
-        if [ -x "${HELPERS_DIR}/zfs-helper" ]; then
-            debug_log "pre-import: start"
-            "${HELPERS_DIR}/zfs-helper" pre-import "$OCF_RESKEY_pool"
-            debug_log "pre-import: done"
-        fi
 
         # The meanings of the options to import are as follows:
         #   -f : import even if the pool is marked as imported to another
@@ -105,11 +100,6 @@ zpool_import () {
         #        the CRM to explicitly control imports of this pool.
         if zpool import -f $OCF_RESKEY_importargs -o cachefile=none "$OCF_RESKEY_pool" ; then
             debug_log "import successful"
-            if [ -x "${HELPERS_DIR}/zfs-helper" ]; then
-                debug_log "post-import: starting"
-                "${HELPERS_DIR}/zfs-helper" post-import "$OCF_RESKEY_pool"
-                debug_log "post-import: done"
-            fi
             return $OCF_SUCCESS
         else
             debug_log "import failed"
@@ -125,11 +115,6 @@ zpool_import () {
 zpool_export () {
     if zpool_is_imported; then
         debug_log "starting export"
-        if [ -x "${HELPERS_DIR}/zfs-helper" ]; then
-            debug_log "pre-export: start"
-            "${HELPERS_DIR}/zfs-helper" pre-export "$OCF_RESKEY_pool"
-            debug_log "pre-export: done"
-        fi
 
         # -f : force the export, even if we have mounted filesystems
         # Please note that this may fail with a "busy" error if there are
@@ -137,11 +122,6 @@ zpool_export () {
         # Always make sure the pool export is last in your failover logic.
         if zpool export -f "$OCF_RESKEY_pool" ; then
             debug_log "export successful"
-            if [ -x "${HELPERS_DIR}/zfs-helper" ]; then
-                debug_log "post-export: starting"
-                "${HELPERS_DIR}/zfs-helper" post-export "$OCF_RESKEY_pool"
-                debug_log "post-export: done"
-            fi
             return $OCF_SUCCESS
 	else
             debug_log "export failed"
